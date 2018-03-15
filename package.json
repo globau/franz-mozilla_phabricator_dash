@@ -1,0 +1,14 @@
+{
+    "id": "mozilla_phabricator_dash",
+    "name": "Mozilla Phabricator",
+    "version": "1.0.0",
+    "description": "Mozilla Phabricator Dashboard",
+    "main": "index.js",
+    "author": "glob <glob@mozilla.com>",
+    "license": "MIT",
+    "repository": "https://github.com/glob/franz-mozilla_phabricator_dash",
+    "config": {
+      "serviceURL": "https://phabricator.services.mozilla.com/",
+      "hasIndirectMessages": false
+    }
+}
