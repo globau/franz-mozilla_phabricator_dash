@@ -22,7 +22,22 @@ module.exports = Franz => {
         }
 
         // count links to diffs
-        Franz.setBadge(document.querySelectorAll('.dashboard-pane a[href^="/D"]').length);
+        let review_count = 0;
+        let wait_count = 0;
+        for (let ul of document.querySelectorAll('.dashboard-pane ul.phui-oi-list-view')) {
+            let count = 0;
+            for (let ch of ul.children) {
+                if (ch.nodeName === 'LI') {
+                    count += 1;
+                }
+            }
+            if (ul.querySelector('h1').textContent === 'Waiting on Review') {
+                wait_count += count;
+            } else {
+                review_count += count;
+            }
+        }
+        Franz.setBadge(review_count, wait_count);
 
         // open links in browser, not franz
         document.querySelectorAll('a').forEach(function(el) {
