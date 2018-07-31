@@ -21,20 +21,35 @@ module.exports = Franz => {
             return;
         }
 
+        // find reviews-by-oldest dashboard pane
+        let pane;
+        for (let div of document.querySelectorAll('div.dashboard-pane')) {
+            let header = div.querySelector('span.phui-header-header');
+            if (!header) continue;
+            if (header.textContent !== 'reviews-by-oldest') continue;
+            pane = div;
+            break;
+        }
+
         // count links to diffs
         let review_count = 0;
         let wait_count = 0;
-        for (let ul of document.querySelectorAll('.dashboard-pane ul.phui-oi-list-view')) {
-            let count = 0;
-            for (let ch of ul.children) {
-                if (ch.nodeName === 'LI') {
-                    count += 1;
+        if (pane) {
+            for (let ul of pane.querySelectorAll('ul.phui-oi-list-view')) {
+                let header = ul.querySelector('h1');
+                if (!header) continue;
+
+                let count = 0;
+                for (let ch of ul.children) {
+                    if (ch.nodeName === 'LI') {
+                        count += 1;
+                    }
                 }
-            }
-            if (ul.querySelector('h1').textContent === 'Waiting on Review') {
-                wait_count += count;
-            } else {
-                review_count += count;
+                if (header.textContent === 'Waiting on Review') {
+                    wait_count += count;
+                } else {
+                    review_count += count;
+                }
             }
         }
         Franz.setBadge(review_count, wait_count);
