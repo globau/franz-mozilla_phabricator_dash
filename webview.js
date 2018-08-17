@@ -9,6 +9,24 @@ module.exports = Franz => {
         e.preventDefault();
     };
 
+    function count_revisions(header) {
+        // find pane by name
+        let pane;
+        for (let div of document.querySelectorAll('.homepage-panel .phui-object-box .phui-object-box')) {
+            let header_div = div.querySelector('span.phui-header-header');
+            if (!header_div) continue;
+            if (header_div.textContent !== header) continue;
+            pane = div;
+            break;
+        }
+        if (!pane) return;
+
+        // count LIs unless empty
+        return pane.querySelector('.phui-oi-empty') ?
+            0 :
+            pane.querySelectorAll('ul.phui-oi-list-view>li').length;
+    };
+
     function initialise() {
         // wait for document to load
         if (document.readyState !== 'complete') {
@@ -21,38 +39,11 @@ module.exports = Franz => {
             return;
         }
 
-        // find reviews-by-oldest dashboard pane
-        let pane;
-        for (let div of document.querySelectorAll('div.dashboard-pane')) {
-            let header = div.querySelector('span.phui-header-header');
-            if (!header) continue;
-            if (header.textContent !== 'reviews-by-oldest') continue;
-            pane = div;
-            break;
-        }
-
-        // count links to diffs
-        let review_count = 0;
-        let wait_count = 0;
-        if (pane) {
-            for (let ul of pane.querySelectorAll('ul.phui-oi-list-view')) {
-                let header = ul.querySelector('h1');
-                if (!header) continue;
-
-                let count = 0;
-                for (let ch of ul.children) {
-                    if (ch.nodeName === 'LI') {
-                        count += 1;
-                    }
-                }
-                if (header.textContent === 'Waiting on Review') {
-                    wait_count += count;
-                } else {
-                    review_count += count;
-                }
-            }
-        }
-        Franz.setBadge(review_count, wait_count);
+        // set badges
+        Franz.setBadge(
+            count_revisions('Must Review') + count_revisions('Ready to Review'),
+            count_revisions('Waiting on Review'),
+        );
 
         // open links in browser, not franz
         document.querySelectorAll('a').forEach(function(el) {

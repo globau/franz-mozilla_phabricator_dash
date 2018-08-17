@@ -1,3 +1,14 @@
+/* hide navigation sidebar */
 .phabricator-side-menu {
+    display: none !important;
+}
+
+/* hide 'recent activity' */
+.homepage-side-panel {
+    display: none !important;
+}
+
+/* hide 'active repositories' */
+.homepage-panel > div:nth-child(2) {
     display: none !important;
 }
